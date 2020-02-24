@@ -13,6 +13,7 @@ import static Utilidades.CreacionCliente_Utilidad.CLIENTE_PRIMERO;
 import VentanasEmergentes.DialogCargarDomingos;
 import VentanasEmergentes.DialogCrearCobro;
 import VentanasEmergentes.DialogCrearGasto;
+import VentanasEmergentes.DialogListaGastos;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -54,6 +55,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private DialogCrearCobro dialogCrearCobro;
 
     private DialogCrearGasto dialogCrearGasto;
+
+    private DialogListaGastos dialogListaGastos;
 
     private ArrayList<Cobro> listaCobros;
 
@@ -200,6 +203,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         barraMenuNuevoCobro = new javax.swing.JMenuItem();
         barraMenuNuevoGasto = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        Ver = new javax.swing.JMenu();
+        barraMenuVerGastos = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -947,6 +952,18 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jMenu1.add(Nuevo);
         jMenu1.add(jSeparator1);
 
+        Ver.setText("Ver");
+
+        barraMenuVerGastos.setText("Gastos");
+        barraMenuVerGastos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barraMenuVerGastosActionPerformed(evt);
+            }
+        });
+        Ver.add(barraMenuVerGastos);
+
+        jMenu1.add(Ver);
+
         jMenuItem2.setText("Salir");
         jMenu1.add(jMenuItem2);
 
@@ -1265,11 +1282,20 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         txtCuotaCapital.setText(null);
         txtCuotaInteres.setText(null);
 
-        String cedula = txtCedula.getText();
-
-        consulta = new Consulta();
-        clienteBuscado = consulta.buscarClientePorCedula(cedula, cboCobros.getSelectedItem().toString());
-        consulta.cerrar();
+        if (cboCobros.getSelectedItem() != null) {
+            String cedula = txtCedula.getText();
+            consulta = new Consulta();
+            clienteBuscado = consulta.buscarClientePorCedula(cedula, cboCobros.getSelectedItem().toString());
+            consulta.cerrar();
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes crear primero un cobro");
+            txtCedula.setText(null);
+            dialogCrearCobro = new DialogCrearCobro(this, true);
+            dialogCrearCobro.setVisible(true);
+            if (dialogCrearCobro.getNombre() != null) {
+                crearNuevoCobro(dialogCrearCobro.getNombre());
+            }
+        }
 
         if (clienteBuscado != null) {
 
@@ -1320,7 +1346,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         consulta = new Consulta();
         lblCantidadAbonos.setText(String.valueOf(consulta.obtenerNumeroAbonos(prestamoActual.getId())));
         listaPrestamosActivos = new ArrayList<>();
-        
+
         consulta.cerrar();
 
         cargarTablaDetalles();
@@ -1567,16 +1593,16 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         this.pkcFecha.getDateEditor().addPropertyChangeListener(
                 new java.beans.PropertyChangeListener() {
 
-                    @Override
-                    public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                        if (listaCobros.size() > 0) {
-                            if (pkcFecha.getDate() != null) {
-                                cargarPrestamosCancelados();
-                                cargarClientesNoCuota();
-                            }
-                        }
+            @Override
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                if (listaCobros.size() > 0) {
+                    if (pkcFecha.getDate() != null) {
+                        cargarPrestamosCancelados();
+                        cargarClientesNoCuota();
                     }
-                });
+                }
+            }
+        });
     }
 
     // Evento para crear un nuevo cobro.
@@ -1717,12 +1743,19 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         cancelarPrestamo();
     }//GEN-LAST:event_btnCancelarPrestamoActionPerformed
 
+    private void barraMenuVerGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraMenuVerGastosActionPerformed
+        // dialogListaGastos = new DialogListaGastos(this, true);
+        //dialogListaGastos.setVisible(true);
+    }//GEN-LAST:event_barraMenuVerGastosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Nuevo;
+    private javax.swing.JMenu Ver;
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JMenuItem barraMenuNuevoCobro;
     private javax.swing.JMenuItem barraMenuNuevoGasto;
+    private javax.swing.JMenuItem barraMenuVerGastos;
     private javax.swing.JButton btnAbono;
     private javax.swing.JButton btnCancelarPrestamo;
     private javax.swing.JButton btnClienteAnterior;

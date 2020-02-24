@@ -1,6 +1,7 @@
 package VentanasEmergentes;
 
 import Mundo.Consulta;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 public class DialogCrearGasto extends javax.swing.JDialog {
@@ -8,7 +9,6 @@ public class DialogCrearGasto extends javax.swing.JDialog {
     // -------------------------------------------------------------------------
     // ATRIBUTOS.
     // ------------------------------------------------------------------------- 
-
     private Consulta consulta;
 
     // -------------------------------------------------------------------------
@@ -53,6 +53,11 @@ public class DialogCrearGasto extends javax.swing.JDialog {
         txtNombre.setMaximumSize(new java.awt.Dimension(120, 23));
         txtNombre.setMinimumSize(new java.awt.Dimension(120, 23));
         txtNombre.setPreferredSize(new java.awt.Dimension(120, 23));
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+        });
         getContentPane().add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
 
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/accept.png"))); // NOI18N
@@ -83,6 +88,11 @@ public class DialogCrearGasto extends javax.swing.JDialog {
         txtValor.setMaximumSize(new java.awt.Dimension(120, 23));
         txtValor.setMinimumSize(new java.awt.Dimension(120, 23));
         txtValor.setPreferredSize(new java.awt.Dimension(120, 23));
+        txtValor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtValorKeyReleased(evt);
+            }
+        });
         getContentPane().add(txtValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -135,6 +145,26 @@ public class DialogCrearGasto extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+        if ((char) evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            txtValor.requestFocus(true);
+        }
+    }//GEN-LAST:event_txtNombreKeyReleased
+
+    private void txtValorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorKeyReleased
+        if ((char) evt.getKeyChar() == KeyEvent.VK_ENTER) {
+            if (validarFormulario()) {
+                if (JOptionPane.showConfirmDialog(this, "¿Deseas crear el gasto?", "CONFIRMACIÓN", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    consulta = new Consulta();
+                    consulta.crearGasto(txtNombre.getText(), Double.parseDouble(txtValor.getText()));
+                    consulta.cerrar();
+                    this.dispose();
+
+                }
+            }
+        }
+    }//GEN-LAST:event_txtValorKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
