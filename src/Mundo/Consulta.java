@@ -554,7 +554,6 @@ public class Consulta {
                            
                             if (rs.next() && rs != null) {
                                 do {
-                                    System.err.println("do de valor");
                                     cobro = cobro + rs.getDouble("VALOR");
                                 } while (rs.next());
                             }

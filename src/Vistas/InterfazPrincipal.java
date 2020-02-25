@@ -148,9 +148,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jTextField20 = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
-        jTextField22 = new javax.swing.JTextField();
-        jTextField23 = new javax.swing.JTextField();
+        txtCobroValor = new javax.swing.JTextField();
+        txtInteresCobroValor = new javax.swing.JTextField();
+        txtCapitalCobroValor = new javax.swing.JTextField();
         jTextField24 = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
@@ -538,17 +538,20 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jLabel26.setText("Utilidad ");
         jPanel7.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, -1, 23));
 
-        jTextField21.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField21.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel7.add(jTextField21, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 50, 23));
+        txtCobroValor.setEditable(false);
+        txtCobroValor.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        txtCobroValor.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txtCobroValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 50, 23));
 
-        jTextField22.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField22.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel7.add(jTextField22, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 50, 23));
+        txtInteresCobroValor.setEditable(false);
+        txtInteresCobroValor.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        txtInteresCobroValor.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txtInteresCobroValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 50, 23));
 
-        jTextField23.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTextField23.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel7.add(jTextField23, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 50, 23));
+        txtCapitalCobroValor.setEditable(false);
+        txtCapitalCobroValor.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        txtCapitalCobroValor.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel7.add(txtCapitalCobroValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 50, 23));
 
         jTextField24.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         jTextField24.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -1590,7 +1593,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private void calcularContabilidad(){
         
         // Instanciamos las fechas limites
-        String fechaInicio, fechaFinal;
+        String fechaInicio = "", fechaFinal = "";
         
         // Instanciamos el calendario a usar.
         Calendar now = Calendar.getInstance();
@@ -1604,6 +1607,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         consulta = new Consulta();
         String cobro = cboCobros.getSelectedItem().toString();
         
+        double valorCobro;
+        
+        
         if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             // Obtenemos la fecha del domingo.
             fechaInicio = formato.format(now.getTime());
@@ -1612,8 +1618,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
             
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
             // Restamos los dias para hacerlo domingo.
             now.add(Calendar.DAY_OF_YEAR, -1);
@@ -1623,9 +1627,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
             
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
             now.add(Calendar.DAY_OF_YEAR, -2);
@@ -1635,9 +1636,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-            
+                        
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY) {
             now.add(Calendar.DAY_OF_YEAR, -3);
             // Obtenemos la fecha del domingo.
@@ -1646,9 +1645,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-            
+                        
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
             now.add(Calendar.DAY_OF_YEAR, -4);
             // Obtenemos la fecha del domingo.
@@ -1657,9 +1654,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-            
+                        
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
             now.add(Calendar.DAY_OF_YEAR, -5);
             // Obtenemos la fecha del domingo.
@@ -1668,9 +1663,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-            
+                        
         } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
             now.add(Calendar.DAY_OF_YEAR, -6);
             // Obtenemos la fecha del domingo.
@@ -1679,10 +1672,16 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             now.add(Calendar.DAY_OF_YEAR, 6);
             // Obtenemos la fecha del sabado.
             fechaFinal = formato.format(now.getTime());
-            
-            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
-            
+                        
         }
+        
+        valorCobro = consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro);
+        
+        txtCobroValor.setText(String.valueOf((long)valorCobro / 1000));
+        txtInteresCobroValor.setText(String.valueOf(((long)(valorCobro * 0.2)) * 0.001));
+        txtCapitalCobroValor.setText(String.valueOf(((long)(valorCobro - (valorCobro * 0.2))) * 0.001));
+        
+        
     }
     
     // -------------------------------------------------------------------------
@@ -1926,9 +1925,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField18;
     private javax.swing.JTextField jTextField19;
     private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
     private javax.swing.JTextField jTextField24;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lblCalificacionCliente;
@@ -1953,11 +1949,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable tablaClientesNoCuota;
     private javax.swing.JTable tablaDescripcionPrestamo;
     private javax.swing.JTable tablaPrestamosCancelados;
+    private javax.swing.JTextField txtCapitalCobroValor;
     private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtCobroValor;
     private javax.swing.JTextField txtCuota;
     private javax.swing.JTextField txtCuotaCapital;
     private javax.swing.JTextField txtCuotaInteres;
     private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtInteresCobroValor;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPlazo;
     private javax.swing.JTextField txtPrestamo;
