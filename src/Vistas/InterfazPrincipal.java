@@ -1586,6 +1586,105 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         }
     }
 
+    // Calcula la contabilidad.
+    private void calcularContabilidad(){
+        
+        // Instanciamos las fechas limites
+        String fechaInicio, fechaFinal;
+        
+        // Instanciamos el calendario a usar.
+        Calendar now = Calendar.getInstance();
+        
+        // Cargamos la fecha que venga por parametro;
+        now.setTime(pkcFecha.getDate());
+
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");
+        String fecha = formato.format(now.getTime());
+        
+        consulta = new Consulta();
+        String cobro = cboCobros.getSelectedItem().toString();
+        
+        if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+            // Restamos los dias para hacerlo domingo.
+            now.add(Calendar.DAY_OF_YEAR, -1);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
+            now.add(Calendar.DAY_OF_YEAR, -2);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY) {
+            now.add(Calendar.DAY_OF_YEAR, -3);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) {
+            now.add(Calendar.DAY_OF_YEAR, -4);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+            now.add(Calendar.DAY_OF_YEAR, -5);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        } else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            now.add(Calendar.DAY_OF_YEAR, -6);
+            // Obtenemos la fecha del domingo.
+            fechaInicio = formato.format(now.getTime());
+            // Sumamos los dias que faltan para ser sabado.
+            now.add(Calendar.DAY_OF_YEAR, 6);
+            // Obtenemos la fecha del sabado.
+            fechaFinal = formato.format(now.getTime());
+            
+            System.err.println("Valor cobro: " + consulta.valorAbonoDeSemana(fechaInicio, fechaFinal, cobro));
+            
+        }
+    }
+    
     // -------------------------------------------------------------------------
     // EVENTOS.
     // -------------------------------------------------------------------------
@@ -1599,6 +1698,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     if (pkcFecha.getDate() != null) {
                         cargarPrestamosCancelados();
                         cargarClientesNoCuota();
+                        calcularContabilidad();
                     }
                 }
             }

@@ -182,22 +182,22 @@ public class Consulta {
 
         return cliente;
     }
-   
+
     // Crea un nuevo prestamo para el cliente.
-    public void crearNuevoPrestamo(Cliente pCliente, Prestamo pPrestamo){
+    public void crearNuevoPrestamo(Cliente pCliente, Prestamo pPrestamo) {
         try {
             st = BaseDatos.createStatement();
-            rs = st.executeQuery("SELECT CREAR_NUEVO_PRESTAMO( '"+ pCliente.getCedula() +"', "+ pPrestamo.getPrestamo() +", "+ pPrestamo.getValor() +", "+ pPrestamo.getInteres() +", "+ pPrestamo.getPlazo() +", '"+ pPrestamo.getFecha() +"')");
-            
+            rs = st.executeQuery("SELECT CREAR_NUEVO_PRESTAMO( '" + pCliente.getCedula() + "', " + pPrestamo.getPrestamo() + ", " + pPrestamo.getValor() + ", " + pPrestamo.getInteres() + ", " + pPrestamo.getPlazo() + ", '" + pPrestamo.getFecha() + "')");
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getStackTrace(), "Consulta: Crear Nuevo Prestamo.", JOptionPane.INFORMATION_MESSAGE, null);
-        }        
+        }
     }
-    
+
     // Crea la lista de los cobros que existen en la base de datos. APROBADO
     public ArrayList<Cliente> listarClientes(String pCobro) {
         try {
-            st = BaseDatos.createStatement();            
+            st = BaseDatos.createStatement();
             rs = st.executeQuery("SELECT * FROM CLIENTES WHERE COBRO='" + pCobro + "' ORDER BY RUTA ASC;");
             listaClientes = new ArrayList<>();
             while (rs.next()) {
@@ -447,80 +447,128 @@ public class Consulta {
     }
 
     // Retorna true si el cliente tiene un prestamo para paga.
-    public boolean validarCancelacionPrestamo(int pIdPrestamo){
+    public boolean validarCancelacionPrestamo(int pIdPrestamo) {
         try {
             st = BaseDatos.createStatement();
-            rs = st.executeQuery("SELECT 1 AS EXISTE FROM PRESTAMOS WHERE ID = "+ pIdPrestamo +" AND ESTADO = 'ACTIVO';");
-            
-            if(rs != null){
-                if(rs.next() && rs.getInt("EXISTE") == 1){
+            rs = st.executeQuery("SELECT 1 AS EXISTE FROM PRESTAMOS WHERE ID = " + pIdPrestamo + " AND ESTADO = 'ACTIVO';");
+
+            if (rs != null) {
+                if (rs.next() && rs.getInt("EXISTE") == 1) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Validacion Cancelacion Prestamo.", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        
+
         return false;
     }
-    
+
     // Realiza la cancelación del prestamo.
-    public void cancelarPrestamo(int pIdPrestamo, String pFecha){
+    public void cancelarPrestamo(int pIdPrestamo, String pFecha) {
         try {
             st = BaseDatos.createStatement();
-            rs = st.executeQuery("SELECT CANCELAR_PRESTAMO("+ pIdPrestamo +", '"+ pFecha +"')");
+            rs = st.executeQuery("SELECT CANCELAR_PRESTAMO(" + pIdPrestamo + ", '" + pFecha + "')");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Cancelacion Prestamo.", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
-    
+
     // Calificar cliente
-    public void calificarCliente(String pCedula){
+    public void calificarCliente(String pCedula) {
         try {
             st = BaseDatos.createStatement();
-            rs = st.executeQuery("SELECT CALIFICAR_CLIENTE('"+ pCedula +"');");            
+            rs = st.executeQuery("SELECT CALIFICAR_CLIENTE('" + pCedula + "');");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Calificar Cliente.", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
-    
+
     // Retorna la cantidad de abonos que a pagado el cliente en un prestamo.
-    public int obtenerNumeroAbonos(int pIdPrestamo){
+    public int obtenerNumeroAbonos(int pIdPrestamo) {
         try {
             st = BaseDatos.createStatement();
-            rs = st.executeQuery("SELECT COUNT(*) AS ABONOS FROM ABONOS WHERE ID_PRESTAMO = "+ pIdPrestamo +";");
-            
-            if(rs.next() && rs != null){
+            rs = st.executeQuery("SELECT COUNT(*) AS ABONOS FROM ABONOS WHERE ID_PRESTAMO = " + pIdPrestamo + ";");
+
+            if (rs.next() && rs != null) {
                 numeroAbonos = rs.getInt("ABONOS");
-            }else{
+            } else {
                 numeroAbonos = 0;
-            }            
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Obtener Numero Abonos.", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        
+
         return numeroAbonos;
     }
-    
+
     // Retorna la cantidad de prestamos.
-    public int obtenerCantidadPrestamos(){
+    public int obtenerCantidadPrestamos() {
         try {
             st = BaseDatos.createStatement();
             rs = st.executeQuery("SELECT COUNT(*) AS PRESTAMOS FROM PRESTAMOS WHERE ESTADO = 'ACTIVO';");
-            
-            if(rs.next() && rs != null){
+
+            if (rs.next() && rs != null) {
                 cantidadPrestamos = rs.getInt("PRESTAMOS");
-            }else{
+            } else {
                 cantidadPrestamos = 0;
             }
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Obtener Cantidad Prestamos.", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        
+
         return cantidadPrestamos;
     }
-    
+
+    // Retorna los abonos entre dos fechas se gun el cobro.
+    public double valorAbonoDeSemana(String pFechaInicio, String pFechaFinal, String pCobro) {
+        double cobro = 0;
+
+        try {
+            st = BaseDatos.createStatement();
+            rs = st.executeQuery("SELECT * FROM CLIENTES WHERE COBRO ='" + pCobro + "'");
+
+            if (rs.next() && rs != null) {
+                ArrayList cedulas = new ArrayList<>();
+                do {                    
+                    cedulas.add(rs.getString("CEDULA"));
+                } while (rs.next());
+
+                int i = 0;
+                while (i < cedulas.size()) {
+                    rs = null;
+                    rs = st.executeQuery("SELECT * FROM PRESTAMOS WHERE CEDULA_CLIENTE = '" + cedulas.get(i) + "';");
+                    if (rs.next() && rs != null) {
+                        ArrayList idPrestamos = new ArrayList<>();
+                        do {
+                            idPrestamos.add(rs.getString("ID"));
+                        } while (rs.next());
+                        
+                        int j = 0;
+                        while (j < idPrestamos.size()) {
+                            rs = null;                            
+                            rs = st.executeQuery("SELECT * FROM ABONOS WHERE ID_PRESTAMO = "+ idPrestamos.get(j) +" AND FECHA >= CAST('"+ pFechaInicio +"' AS DATE) AND FECHA <= CAST('"+ pFechaFinal +"' AS DATE);");
+                           
+                            if (rs.next() && rs != null) {
+                                do {
+                                    System.err.println("do de valor");
+                                    cobro = cobro + rs.getDouble("VALOR");
+                                } while (rs.next());
+                            }
+                            j++;
+                        }
+                    }
+                    i++;
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Consulta: Valor Abono De Semana.", JOptionPane.INFORMATION_MESSAGE, null);
+        }
+
+        return cobro;
+    }
 }
